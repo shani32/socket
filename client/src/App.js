@@ -8,24 +8,24 @@ const CONNECTION_PORT='localhost:3000/'
 
 function App() {
   //before login
-  const [loggedIn, setLoggedIn]= useState(true)
-  const [rooms, setRooms]=useState('2023');
+  const [loggedIn, setLoggedIn]= useState(false)
+  const [rooms, setRooms]=useState('');
   const [userName, setUserName]= useState('')
 
   //after login
   const [message, setMessage]= useState("");
-  const [messageList, setMessageList]=useState([{author: 'shani', message: "hello"}])
+  const [messageList, setMessageList]=useState([])
 
-// useEffect(()=>{
-//   socket=io(CONNECTION_PORT)
-// },[CONNECTION_PORT])
+useEffect(()=>{
+  socket=io(CONNECTION_PORT)
+},[CONNECTION_PORT])
 
 
-// useEffect(()=>{
-//   socket.on("receive_message", (data)=>{
-//     setMessageList([...messageList, data])
-//   })
-// })
+useEffect(()=>{
+  socket.on("receive_message", (data)=>{
+    setMessageList([...messageList, data])
+  })
+})
 const connectToRoom=()=>{
   setLoggedIn(true)
   socket.emit('join_room', rooms)
@@ -65,11 +65,12 @@ const sendMessage= async ()=>{
         <div className='messages'>
           {messageList.map((val, key)=>{
             return (
-              <>
-             {val.author}  
-            <div className='message'>{val.message}</div>
+              <div className='messageContainer' id={val.author=== userName? "You": "Other"}>
+             
+            <div className='message'><span>{val.author}</span> {val.message}</div>
+           
             
-            </>
+            </div>
             )
           })}
         </div>
