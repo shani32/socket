@@ -1,0 +1,33 @@
+body{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.App{
+  display: grid;
+  place-items: center;
+  height: 100vh;
+  background-color: rgb(170, 207, 195);
+}
+.login{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 600px;
+  height: 300px;
+  border: 5px solid #0091ff;
+  border-radius: 7px;
+ 
+}
+.login input{
+  margin: 10px;
+  width: 200px;
+  height: 40px;
+  border: 5px solid #0091ff;
+  background-color: transparent;
+   display: flex;
+}
+.inputs{
+  padding: 10px;
+ 
+}
