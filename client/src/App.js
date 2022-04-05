@@ -4,21 +4,46 @@ import './App.css';
 import io from 'socket.io-client'
 
 let socket;
-const CONNECTION_PORT='localhost:3004/'
+const CONNECTION_PORT='localhost:3000/'
 
 function App() {
-  const [loggedIn, setLoggedIn]= useState(false)
-
-  const [rooms, setRooms]=useState('');
+  //before login
+  const [loggedIn, setLoggedIn]= useState(true)
+  const [rooms, setRooms]=useState('2023');
   const [userName, setUserName]= useState('')
 
-useEffect(()=>{
-  socket=io(CONNECTION_PORT)
-},[CONNECTION_PORT])
+  //after login
+  const [message, setMessage]= useState("");
+  const [messageList, setMessageList]=useState([{author: 'shani', message: "hello"}])
 
+// useEffect(()=>{
+//   socket=io(CONNECTION_PORT)
+// },[CONNECTION_PORT])
+
+
+// useEffect(()=>{
+//   socket.on("receive_message", (data)=>{
+//     setMessageList([...messageList, data])
+//   })
+// })
 const connectToRoom=()=>{
   setLoggedIn(true)
   socket.emit('join_room', rooms)
+}
+
+const sendMessage= async ()=>{
+  let messageContent={
+    rooms:rooms,
+    content:{
+    author: userName,
+    message:message
+
+    }
+    
+  }
+  await socket.emit("send_message", messageContent)
+  setMessageList([...messageList, messageContent.content])
+  setMessage("")
 }
 
   return (
@@ -36,7 +61,24 @@ const connectToRoom=()=>{
           <button onClick={connectToRoom}>Enter Chat</button>
         </div>
       )
-      : (<h1>you are logged in</h1>)}
+      : (<div className='chatContainer'>
+        <div className='messages'>
+          {messageList.map((val, key)=>{
+            return (
+              <>
+             {val.author}  
+            <div className='message'>{val.message}</div>
+            
+            </>
+            )
+          })}
+        </div>
+        <div className='messageInputs'>
+          <input type="text" placeholder="Message.." onChange={(e)=>{
+              setMessage(e.target.value)}}/>
+          <button onClick={sendMessage}>Send</button>
+        </div>
+        </div>)}
 
       
     </div>
